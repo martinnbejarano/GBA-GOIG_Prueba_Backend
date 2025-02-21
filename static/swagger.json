@@ -1,0 +1,249 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Prueba Backend",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api",
+      "description": "localhost"
+    }
+  ],
+  "paths": {
+    "/weather-station": {
+      "post": {
+        "summary": "Crear una nueva estación meteorológica",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "latitude", "longitude"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nombre de la estación meteorológica"
+                  },
+                  "latitude": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Latitud de la ubicación"
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Longitud de la ubicación"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Estación creada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "ID de la estación creada"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Mensaje de confirmación"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Mensaje de error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/weather-station/{station_id}": {
+      "put": {
+        "summary": "Actualizar una estación meteorológica",
+        "parameters": [
+          {
+            "name": "station_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nuevo nombre de la estación"
+                  },
+                  "latitude": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Nueva latitud"
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Nueva longitud"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Estación actualizada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Estación no encontrada"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar una estación meteorológica",
+        "parameters": [
+          {
+            "name": "station_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estación eliminada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Estación no encontrada"
+          }
+        }
+      }
+    },
+    "/weather-data": {
+      "get": {
+        "summary": "Obtener datos meteorológicos de la estación más cercana",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "latitude",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "float"
+            }
+          },
+          {
+            "in": "query",
+            "name": "longitude",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "float"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Datos meteorológicos obtenidos exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "station_name": {
+                      "type": "string"
+                    },
+                    "temperature": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "humidity": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "pressure": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No se encontraron estaciones"
+          }
+        }
+      }
+    }
+  }
+}
