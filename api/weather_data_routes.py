@@ -10,6 +10,16 @@ def get_weather_data():
         longitude = float(request.args.get('longitude'))
         latitude = float(request.args.get('latitude'))
         
+        if not (-90 <= latitude <= 90):
+            return {
+                "message": "Latitude must be between -90 and 90 degrees"
+            }, 400
+            
+        if not (-180 <= longitude <= 180):
+            return {
+                "message": "Longitude must be between -180 and 180 degrees"
+            }, 400
+        
         station = get_closest_weather_station(longitude=longitude, latitude=latitude)
         
         if station:
